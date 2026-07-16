@@ -1,0 +1,24 @@
+# functions - to made
+
+- [x] editor
+  - [x] autoIndent
+  - [x] autoPais
+  - [x] comments
+  - [x] languages
+  - [x] lineNumbers
+  - [x] syncScroll
+  - [x] editor -> keyDown
+- [x] general buttons
+  - [x] languages button
+  - [x] theme buttons
+  - [x] clear button
+  - [x] clear button overlay
+  - [x] visulizer button to overlay
+  - [x] visulizer overlay button
+  - [x] hamburgr button
+- [x] tabs
+  - [x] input tab
+  - [x] output tab
+- [x] extra
+  - [x] input clear button
+  - [x] output clear button

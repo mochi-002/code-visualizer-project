@@ -1,34 +1,69 @@
-import { fileName, input, output, tracerBody, visCanvas, visDetected, lineNum } from "../componants/defaults.js"
+import { resetUI } from "./reset-ui.js";
+import { getLanguage } from "../utils/storage.js";
+import { PYTHON_DEFAULT, CPP_DEFAULT } from "../utils/constants.js";
+import { $, $$, editor } from "../utils/dom.js";
+import { setLanguage } from "../utils/storage.js";
 
-const PYTHON_DEFAULT = `def main():
-    print("Hello, World!")
+const fileName = $("filename");
 
+const desktopButtons = $$("[data-lang]");
+const mobileButtons = $$("[data-mobile-lang]");
+const pythonBtn = $("btn-py")
+const cppBtn = $("btn-cpp")
 
-if __name__ == "__main__":
-    main()
-`;
+function updateLanguageButtons(lang) {
+    pythonBtn.classList.toggle(
+        "lang-btn-python-active",
+        lang === "python"
+    );
 
-const CPP_DEFAULT = `#include <iostream>
+    cppBtn.classList.toggle(
+        "lang-btn-cpp-active",
+        lang === "cpp"
+    );
 
-int main() {
-    std::cout << "Hello, World!" << std::endl;
-    return 0;
+    pythonBtn.classList.toggle(
+        "lang-btn-inactive",
+        lang !== "python"
+    );
+
+    cppBtn.classList.toggle(
+        "lang-btn-inactive",
+        lang !== "cpp"
+    );
 }
-`;
 
-function clearState() {
-    input.value = ""
-    output.textContent = `Run your code to see the Output ...`
-    tracerBody.innerHTML = `<div class="text-[#d8d6d1] dark:text-border2 text-center px-3 sm:text-xl text-base">Run the code to trace its steps</div>`
-    visDetected.textContent = `auto-detect from code`
-    visCanvas.innerHTML = `<div class="dark:text-[#c9c7c2] text-[#2a2a2a] text-center leading-[2px]">
-            Click <span class="capitalize dark:text-vis text-sky-700">vizualise</span>
-            </div>`
-    lineNum.textContent = `line -`
+function applyLanguage(lang) {
+    setLanguage(lang);
+
+    editor.placeholder = lang === "python"
+        ? PYTHON_DEFAULT
+        : CPP_DEFAULT;
+
+    fileName.textContent = lang === "python"
+        ? "main.py"
+        : "main.cpp";
+
+    localStorage.setItem("language", lang);
+    updateLanguageButtons(lang)
+    resetUI();
 }
 
-export function setLanguage(editor, lang) {
-    editor.value = (lang === 'p' ? PYTHON_DEFAULT : CPP_DEFAULT)
-    fileName.textContent = (lang === 'p' ? `main.py` : `main.cpp`)
-    clearState()
+export function initLanguage() {
+    const saved = getLanguage();
+    applyLanguage(saved);
+
+    [...desktopButtons].forEach(button => {
+        button.addEventListener("click", () => {
+            const lang = button.dataset.lang || button.dataset.mobileLang;
+            applyLanguage(lang);
+        });
+    });
+
+    [...mobileButtons].forEach(button => {
+        button.addEventListener("click", () => {
+            const lang = button.dataset.lang || button.dataset.mobileLang;
+            applyLanguage(lang);
+        });
+    });
 }

@@ -1,165 +1,431 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Code Vizualiser</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="./css/all.min.css" />
-  <link rel="stylesheet" href="./css/global_rules.css" />
-  <link rel="stylesheet" href="./css/normalize.css" />
-  <link rel="stylesheet" href="./css/style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title class="capitalize">Code visualiser</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./css/all.min.css" />
+    <link rel="stylesheet" href="./css/global_rules.css" />
+    <link rel="stylesheet" href="./css/normalize.css" />
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="icon" href="./icons/favicon.ico">
 </head>
 
-<body class="font-sans">
-  <div id="root"
-    class="flex flex-col h-screen bg-[#f5f4f2] dark:bg-main text-[#1c1c1c] dark:text-ink text-lg transition-colors duration-main">
+<body class="font-sans bg-[#f5f4f2] dark:bg-main dark:text-ink transition-colors duration-200">
+    <div id="root" class="flex flex-col h-screen overflow-hidden">
+        <!-- Header -->
+        <header class="sticky top-0 z-10 bg-[#f5f4f2] dark:bg-main border-b border-[#e2e0dc] dark:border-border1">
+            <!-- Container -->
+            <section class="flex items-center justify-between px-4 py-3 mx-auto max-w-8xl">
+                <!-- logo -->
+                <h1 class="text-base font-medium tracking-[0.15em] uppercase sm:text-lg text-second">
+                    <a href="#">code visualiser</a>
+                </h1>
 
-    <!-- Top bar -->
-    <div
-      class="flex flex-wrap items-center justify-between gap-3.5 px-4 sm:px-5 py-2.5 border-b border-[#e2e0dc] dark:border-border1 shrink-0 bg-[#f5f4f2] dark:bg-main transition-colors duration-main">
+                <!-- right side -->
+                <button id="hamburger-btn" class="relative w-8 h-8 md:hidden" aria-label="Open Menu">
+                    <div class="absolute top-4 -mt-0.5 h-1 w-8 rounded bg-current
+                    transition-all duration-200
+                    before:absolute before:h-1 before:w-8 before:-translate-x-4 before:-translate-y-3
+                    before:rounded before:bg-current before:content-['']
+                    before:transition-all before:duration-200
+                    after:absolute after:h-1 after:w-8 after:-translate-x-4 after:translate-y-3
+                    after:rounded after:bg-current after:content-['']
+                    after:transition-all after:duration-200">
+                    </div>
+                </button>
 
-      <!-- Logo -->
-      <span class="text-second uppercase tracking-[0.15em] font-medium text-base sm:text-lg">Code Vizualiser</span>
+                <!-- desktop nav -->
+                <nav class="items-center hidden gap-4 md:flex">
+                    <!-- language -->
+                    <button id="btn-py" data-lang="python"
+                        class="lang-btn lang-btn-python-hover lang-btn-python-active">
+                        Python
+                    </button>
 
-      <!-- Language buttons -->
-      <div class="flex items-center gap-3 ml-auto">
-        <div class="flex gap-1.5">
-          <button id="btn-python" data-lang="python" class="lang-btn lang-btn-python-hover lang-btn-python-active">
-            Python
-          </button>
-          <button id="btn-cpp" data-lang="cpp" class="lang-btn lang-btn-cpp-hover lang-btn-inactive">
-            C++
-          </button>
-        </div>
+                    <button id="btn-cpp" data-lang="cpp" class="lang-btn lang-btn-inactive lang-btn-cpp-hover">
+                        C++
+                    </button>
 
-        <!-- theme toggle -->
-        <button id="btn-theme" aria-label="Toggle dark mode"
-          class="w-8 h-8 flex items-center justify-center rounded-main border border-[#d8d6d1] dark:border-border2 hover:border-sky-400 dark:hover:border-amber-400 transition-all duration-main">
-          <i class="fa-solid fa-moon dark:hidden text-sky-400 drop-shadow-[0_0_4px_rgba(56,189,248,0.6)]"></i>
-          <i class="fa-solid fa-sun hidden dark:inline text-amber-400 drop-shadow-[0_0_4px_rgba(251,191,36,0.6)]"></i>
-        </button>
-      </div>
+                    <!-- theme -->
+                    <button id="theme-btn" aria-label="Toggle Dark Theme"
+                        class="flex items-center justify-center w-8 h-8 border border-[#d8d6d1] dark:border-border2 hover:border-sky-400 dark:hover:border-amber-400 transition-all duration-main rounded-main">
+                        <i
+                            class="fa-solid fa-moon dark:hidden text-sky-400 drop-shadow-[0_0_4px_rgba(56,189,248,0.6)]"></i>
+                        <i
+                            class="hidden fa-solid fa-sun dark:inline text-amber-400 drop-shadow-[0_0_4px_rgba(251,191,36,0.6)]"></i>
+                    </button>
+                </nav>
+            </section>
+
+            <!-- Overlay -->
+            <div id="menu-overlay"
+                class="fixed hidden inset-0 top-[56px] z-40 bg-black/40 backdrop-blur-[2px] md:hidden">
+            </div>
+
+            <!-- Mobile Dropdown -->
+            <section id="mobile-menu"
+                class="absolute top-full right-4 z-50 hidden w-72 overflow-hidden rounded-xl border border-[#e2e0dc] dark:border-border1 bg-[#f5f4f2] dark:bg-main shadow-2xl md:hidden">
+
+                <nav class="p-2">
+                    <!-- Language -->
+                    <div class="px-3 py-2">
+                        <p class="mb-2 text-xs font-semibold tracking-widest uppercase text-second">
+                            Language
+                        </p>
+
+                        <button id="py-btn-mobile" data-mobile-lang="python"
+                            class="flex w-full items-center justify-between rounded-lg px-3 py-2.5 hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
+                            <span>Python</span>
+                        </button>
+
+                        <button id="cpp-btn-mobile" data-mobile-lang="cpp"
+                            class="mt-1 flex w-full items-center justify-between rounded-lg px-3 py-2.5 hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
+                            <span>C++</span>
+                        </button>
+                    </div>
+
+                    <hr class="border-[#e2e0dc] dark:border-border1">
+
+                    <!-- Appearance -->
+                    <div class="px-3 py-2">
+                        <p class="mb-2 text-xs font-semibold tracking-widest uppercase text-second">
+                            Appearance
+                        </p>
+
+                        <button data-theme="dark" id="dark-theme-btn-mobile"
+                            class="flex w-full items-center justify-between rounded-lg px-3 py-2.5 hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
+                            <span class="flex items-center gap-3">
+                                Dark Mode
+                            </span>
+                        </button>
+
+                        <button data-theme="light" id="light-theme-btn-mobile"
+                            class="mt-1 flex w-full items-center justify-between rounded-lg px-3 py-2.5 hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
+                            <span class="flex items-center gap-3">
+                                Light Mode
+                            </span>
+                        </button>
+                    </div>
+                </nav>
+            </section>
+        </header>
+
+        <!-- Content -->
+        <main class="flex-1 min-h-0 overflow-hidden">
+
+            <section
+                class="grid h-full min-h-0 grid-cols-1 lg:grid-cols-2 lg:divide-x divide-[#e2e0dc] dark:divide-border1">
+                <!-- left panel -->
+                <section
+                    class="flex h-full min-h-0 flex-col overflow-hidden border-b lg:border-b-0 lg:border-r border-[#e2e0dc] dark:border-border1 bg-[#f5f4f2] dark:bg-main transition-colors duration-main">
+                    <!-- header -->
+                    <header
+                        class="flex items-center gap-2 px-4 h-11 border-b border-[#e2e0dc] dark:border-border1 bg-[#ececec] dark:bg-[#111]">
+                        <span class="w-3.5 h-3.5 rounded-full bg-[#ff5f57]"></span>
+                        <span class="w-3.5 h-3.5 rounded-full bg-[#febc2e]"></span>
+                        <span class="w-3.5 h-3.5 rounded-full bg-[#28c840]"></span>
+                        <span id="filename" class="text-[#999] dark:text-[#555] ml-2">main.py</span>
+                    </header>
+
+                    <!-- code editor -->
+                    <section class="flex flex-1 min-h-0 overflow-hidden">
+                        <!-- line number -->
+                        <aside id="line-nums"
+                            class="overflow-hidden flex-shrink-0 min-w-10 sm:min-w-12 border-r border-[#e2e0dc] dark:border-border1 pt-3 pr-2 text-right select-none text-[#b7b5b0] dark:text-[#444] bg-[#f5f4f2] dark:bg-main text-sm sm:text-base leading-7">
+                            <div id="line-num-content" class="whitespace-pre">1</div>
+                        </aside>
+
+                        <!-- code editor -->
+                        <textarea id="code-editor"
+                            class="flex-1 h-full overflow-y-auto resize-none border-none outline-none bg-[#f5f4f2] dark:bg-main text-[#2f7d43] dark:text-[#a8d8a8] leading-7 font-mono px-4 py-3 caret-second text-sm sm:text-base"></textarea>
+                    </section>
+
+                    <footer
+                        class="border-t min-h-16 border-[#e2e0dc] dark:border-border1 bg-[#ececec] dark:bg-[#111] p-2.5">
+                        <div class="flex gap-2">
+                            <button id="clearBtn" disabled
+                                class="rounded-main border border-red-300 px-4 py-2 text-red-500 transition disabled:pointer-events-none disabled:opacity-40 hover:bg-red-500 hover:text-white">
+                                Clear
+                            </button>
+
+                            <button id="checkCode"
+                                class="flex-1 lg:flex-none rounded-main border border-indigo-500 text-indigo-500 px-4 py-2 transition-all duration-main hover:bg-indigo-500 hover:text-white">
+                                Check
+                            </button>
+
+                            <button id="runCode"
+                                class="flex-1 lg:flex-none rounded-main border border-second px-4 py-2 transition hover:bg-second hover:text-white">
+                                Run
+                            </button>
+
+                            <button id="visualizer"
+                                class="hidden lg:flex flex-1 px-4 py-2 justify-center transition border rounded-main border-vis text-vis hover:bg-vis hover:text-white">
+                                Visualize
+                            </button>
+
+                            <button id="open-visualizer"
+                                class="lg:hidden px-4 py-2 transition border flex-1 rounded-main border-vis text-vis hover:bg-vis hover:text-white">
+                                Open Visualizer
+                            </button>
+                        </div>
+                    </footer>
+
+                    <!-- bottom section -->
+                    <section class="flex-shrink-0 h-[161px] border-t border-[#e2e0dc] dark:border-border1">
+                        <!-- mobile tabs -->
+                        <div class="flex sm:hidden">
+                            <button id="tab-input" data-tab="input" class="tab-btn">
+                                <span>Input</span>
+                                <i id="clear-input-mobile"
+                                    class="fa-solid fa-xmark text-xs opacity-60 hover:opacity-100">
+                                </i>
+                            </button>
+
+                            <button id="tab-output" data-tab="output" class="tab-btn">
+                                <span>Output</span>
+                                <i id="clear-output-mobile"
+                                    class="fa-solid fa-xmark text-xs opacity-60 hover:opacity-100">
+                                </i>
+                            </button>
+                        </div>
+
+                        <!-- desktop labels -->
+                        <div class="hidden sm:grid grid-cols-2 bg-[#ececec] dark:bg-[#111]">
+                            <div
+                                class="flex items-center border-r border-[#e2e0dc] dark:border-border1 px-4 py-2 uppercase tracking-widest text-sm">
+                                <span class="flex-1">
+                                    Input
+                                </span>
+                                <button id="clear-input" aria-label="Clear Input"
+                                    class="flex h-6 w-6 items-center justify-center rounded-main text-[#888] dark:text-[#666] transition-all duration-200 hover:bg-red-500  hover:text-white">
+                                    <i class="fa-solid fa-xmark text-sm hover:text-white"></i>
+                                </button>
+                            </div>
+
+                            <div class="flex items-center px-4 py-2 uppercase tracking-widest text-sm">
+                                <span class="flex-1">
+                                    Output
+                                </span>
+                                <button id="clear-output" aria-label="Clear Output"
+                                    class="flex h-6 w-6 items-center justify-center rounded-main text-[#888] dark:text-[#666] transition-all duration-200 hover:bg-red-500  hover:text-white">
+                                    <i class="fa-solid fa-xmark text-sm hover:text-white"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- content -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2">
+                            <!-- input -->
+                            <textarea id="input-box" data-panel="input"
+                                class="min-h-32 sm:min-h-40 resize-none border-r border-[#e2e0dc] dark:border-border1 bg-[#f5f4f2] dark:bg-main px-4 py-3 outline-none"></textarea>
+
+                            <!-- output -->
+                            <div id="output-box" data-panel="output"
+                                class="hidden sm:block min-h-32 sm:min-h-40 bg-[#f5f4f2] dark:bg-main px-4 py-3 whitespace-none text-center text-[#2f7d43] dark:text-[#a8d8a8]">
+                                Run your code to see the output...
+                            </div>
+                        </div>
+                    </section>
+                </section>
+
+                <!-- desktop visualiser -->
+                <section id="desktop-visualizer"
+                    class="hidden lg:flex h-full min-h-0 flex-col overflow-hidden bg-[#f5f4f2] dark:bg-main">
+                    <!-- visualiser -->
+                    <section class="flex flex-col flex-1 min-h-0">
+                        <!-- header -->
+                        <header
+                            class="flex items-center h-11 border-b border-[#ee2e0dc] dark:border-border1 bg-[#ececec] dark:bg-[#111] px-4">
+                            <h2 class="text-sm font-medium uppercase tracking-[0.15em] text-vis">
+                                Visualizer
+                            </h2>
+                            <span id="viz-detected" class="ml-auto text-xs tracking-wide text-[#999] dark:text-[#555]">
+                                Auto Detect
+                            </span>
+                        </header>
+
+                        <!-- canvas -->
+                        <div id="viz-canvas" class="flex items-center justify-center flex-1 min-h-0 p-6 overflow-auto">
+                            <div class="space-y-4 text-center">
+                                <div class="flex items-center justify-center w-20 h-20 mx-auto rounded-full bg-vis/10">
+                                    <i class="text-4xl fa-solid fa-code text-vis">
+                                    </i>
+                                </div>
+                                <div>
+                                    <p class="text-lg font-medium text-[#444] dark:text-[#d0d0d0]">
+                                        Ready to Visualize
+                                    </p>
+                                    <p class="mt-2 text-sm text-[#888] dark:text-[#666]">
+                                        Click
+                                        <span class="font-medium text-vis">
+                                            Visualize
+                                        </span>
+                                        to generate the execution graph.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <!-- tracer -->
+                    <section id="tracer-panel"
+                        class="flex flex-shrink-0 flex-col border-t border-[#e2e0dc] dark:border-border1">
+                        <!-- Toolbar -->
+                        <header
+                            class="flex h-16 items-center gap-2 border-b border-[#e2e0dc] dark:border-border1 bg-[#ececec] dark:bg-[#111] px-4">
+                            <span class="text-sm uppercase tracking-[0.15em] text-second">
+                                Tracer
+                            </span>
+                            <button onclick="stepBack()"
+                                class="flex h-8 w-8 items-center justify-center rounded-main border border-[#d8d6d1] dark:border-border2 transition-all duration-200 hover:border-second hover:bg-second hover:text-white">
+                                <i class="fa-solid fa-arrow-left"></i>
+                            </button>
+                            <button onclick="stepFwd()"
+                                class="flex h-8 w-8 items-center justify-center rounded-main border border-[#d8d6d1] dark:border-border2 transition-all duration-200 hover:border-second hover:bg-second hover:text-white">
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </button>
+                            <span id="current-line" class="ml-auto text-sm text-[#999] dark:text-[#555]">
+                                Line —
+                            </span>
+                        </header>
+                        <!-- Trace -->
+                        <div id="tracer-body" class="h-40 overflow-y-auto p-4 bg-[#f5f4f2] dark:bg-main">
+                            <div class="flex items-center justify-center flex-1">
+                                <div class="max-w-xs text-center">
+                                    <i class="fa-solid fa-route mb-4 text-3xl text-[#c7c7c7] dark:text-[#444]">
+                                    </i>
+                                    <p class="text-sm text-[#888] dark:text-[#666]">
+                                        Run your program to inspect every execution step.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </section>
+
+                <!-- mobile visualiser -->
+                <div id="visualizer-overlay" class="fixed inset-0 z-40 hidden bg-black/50 backdrop-blur-sm lg:hidden">
+                    <section
+                        class="absolute inset-x-4 top-5 bottom-4 flex min-h-0 flex-col overflow-hidden rounded-xl border border-[#e2e0dc] dark:border-border1 bg-[#f5f4f2] dark:bg-main shadow-2xl animate-menu-open">
+                        <!-- header -->
+                        <header
+                            class="flex h-11 items-center border-b border-[#e2e0dc] dark:border-border1 bg-[#ececec] dark:bg-[#111] px-4">
+                            <h2 class="text-sm font-medium uppercase tracking-[0.15em] text-vis">
+                                Visualizer
+                            </h2>
+
+                            <button id="close-visualizer"
+                                class="ml-auto flex h-8 w-8 items-center justify-center rounded-main border border-[#d8d6d1] dark:border-border2 transition-all duration-200 hover:border-red-500 hover:bg-red-500 hover:text-white">
+                                <i class="fa-solid fa-xmark"></i>
+                            </button>
+                        </header>
+
+                        <!-- visualzier -->
+                        <section id="mobile-viz-canvas"
+                            class="flex items-center justify-center flex-1 min-h-0 p-6 overflow-auto">
+                            <div class="space-y-4 text-center">
+                                <div class="flex items-center justify-center w-20 h-20 mx-auto rounded-full bg-vis/10">
+                                    <i class="text-4xl fa-solid fa-code text-vis">
+                                    </i>
+                                </div>
+                                <div>
+                                    <p class="text-lg font-medium text-[#444] dark:text-[#d0d0d0]">
+                                        Ready to Visualize
+                                    </p>
+                                    <p class="mt-2 text-sm text-[#888] dark:text-[#666]">
+                                        Tap
+                                        <span class="font-medium text-vis">
+                                            Visualize
+                                        </span>
+                                        to generate the execution graph.
+                                    </p>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- tracer -->
+                        <section class="flex flex-shrink-0 flex-col border-t border-[#e2e0dc] dark:border-border1">
+
+                            <!-- Toolbar -->
+                            <header
+                                class="flex h-14 items-center gap-2 border-b border-[#e2e0dc] dark:border-border1 bg-[#ececec] dark:bg-[#111] px-4">
+                                <span class="text-sm uppercase tracking-[0.15em] text-second">
+                                    Tracer
+                                </span>
+                                <button onclick="stepBack()"
+                                    class="flex h-8 w-8 items-center justify-center rounded-main border border-[#d8d6d1] dark:border-border2 transition-all duration-200 hover:border-second hover:bg-second hover:text-white">
+                                    <i class="fa-solid fa-arrow-left"></i>
+                                </button>
+                                <button onclick="stepFwd()"
+                                    class="flex h-8 w-8 items-center justify-center rounded-main border border-[#d8d6d1] dark:border-border2 transition-all duration-200 hover:border-second hover:bg-second hover:text-white">
+                                    <i class="fa-solid fa-arrow-right"></i>
+                                </button>
+                                <span id="mobile-current-line" class="ml-auto text-sm text-[#999] dark:text-[#555]">
+                                    Line —
+                                </span>
+                            </header>
+
+                            <!-- Trace Body -->
+                            <div id="mobile-tracer-body" class="h-40 overflow-y-auto bg-[#f5f4f2] dark:bg-main p-4">
+                                <div class="flex items-center justify-center h-full">
+                                    <div class="max-w-xs text-center">
+                                        <i class="fa-solid fa-route mb-4 text-3xl text-[#c7c7c7] dark:text-[#444]">
+                                        </i>
+                                        <p class="text-sm text-[#888] dark:text-[#666]">
+                                            Run your program to inspect every execution step.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </section>
+                </div>
+            </section>
+        </main>
     </div>
 
-    <!-- Panels -->
-    <div class="flex flex-col flex-1 min-h-0 overflow-hidden lg:flex-row">
-
-      <!-- Left panel -->
-      <div
-        class="flex flex-col w-full lg:w-1/2 min-h-0 border-b lg:border-b-0 lg:border-r border-[#e2e0dc] dark:border-border1 bg-[#f5f4f2] dark:bg-main transition-colors duration-main">
-
-        <!-- Code editor buttons -->
-        <div class="editor">
-          <div
-            class="h-[45px] flex items-center gap-2 px-3.5 py-2 border-b border-[#e2e0dc] dark:border-border1 bg-[#ececec] dark:bg-[#111] shrink-0">
-            <div class="w-3.5 h-3.5 rounded-full bg-[#ff5f57]"></div>
-            <div class="w-3.5 h-3.5 rounded-full bg-[#febc2e]"></div>
-            <div class="w-3.5 h-3.5 rounded-full bg-[#28c840]"></div>
-            <span id="filename" class="text-[#999] dark:text-[#555] ml-2">main.py</span>
-          </div>
-        </div>
-
-        <!-- Code editor -->
-        <div class="flex flex-1 min-h-0 overflow-hidden">
-          <div id="line-nums"
-            class="pt-3.5 pr-[11px] pb-3.5 pl-2 text-right select-none text-[#b7b5b0] dark:text-[#383838] text-[17px] leading-7 min-w-[50px] sm:min-w-[50px] bg-[#f5f4f2] dark:bg-main border-r border-[#e2e0dc] dark:border-border1 overflow-hidden">
-            <div id="line-num-content" class="whitespace-pre">1</div>
-          </div>
-          <textarea id="code-editor" spellcheck="false" autocorrect="off" autocapitalize="off" autocomplete="off"
-            class="flex-1 bg-[#f5f4f2] dark:bg-main text-[#2f7d43] dark:text-[#a8d8a8] leading-7 font-mono px-3 sm:px-[17px] py-3.5 border-none resize-none outline-none overflow-y-auto whitespace-pre caret-second text-base"
-            style="tab-size: 6;"></textarea>
-        </div>
-
-        <!-- Code buttons -->
+    <!-- any confirm -->
+    <div id="confirm-overlay"
+        class="fixed inset-0 z-[100] w-full h-full hidden items-center justify-center bg-black/50 backdrop-blur-sm">
         <div
-          class="flex flex-wrap border-t border-[#e2e0dc] dark:border-border1 items-center gap-[7px] px-3.5 py-[11px] lg:h-[56px] lg:py-0 bg-[#ececec] dark:bg-[#111] shrink-0">
-          <button id="checkCode"
-            class="flex items-center px-4 sm:px-5 py-1.5 rounded-main border border-[#d8d6d1] dark:border-border2 bg-transparent text-[#555] dark:text-[#aaa] cursor-pointer transition-all duration-main hover:bg-[#555] hover:text-[#f5f4f2] dark:hover:bg-[#aaa] dark:hover:text-main text-sm sm:text-base">
-            Check
-          </button>
-          <button id="runCode"
-            class="flex items-center px-4 sm:px-5 py-1.5 rounded-main border border-second text-second bg-[#ffe9da] dark:bg-[#1a1209] cursor-pointer transition-all duration-main hover:bg-second hover:text-white dark:hover:text-main text-sm sm:text-base">
-            Run
-          </button>
-          <button onclick="visualize()"
-            class="flex items-center px-4 sm:px-5 py-1.5 rounded-main border border-vis text-vis bg-transparent cursor-pointer transition-all duration-main hover:bg-vis hover:text-white dark:hover:text-main text-sm sm:text-base">
-            Visualize
-          </button>
-          <span class="i-syntax ml-auto px-5 py-1.5 rounded-main self-center hidden"></span>
-        </div>
+            class="w-[90%] max-w-md rounded-xl border border-[#e2e0dc] dark:border-border1 bg-[#f5f4f2] dark:bg-main shadow-2xl">
 
-        <div
-          class="flex flex-col sm:flex-row shrink-0 border-t border-[#e2e0dc] dark:border-border1 min-h-[120px] sm:h-[100px]">
-          <div class="flex-1 flex flex-col border-b sm:border-b-0 sm:border-r border-[#e2e0dc] dark:border-border1">
-            <div
-              class="px-3.5 py-1.5 text-[#777] dark:text-[#444] bg-[#f5f4f2] dark:bg-main uppercase border-b border-[#e2e0dc] dark:border-border1 shrink-0 tracking-[0.1em] text-xs sm:text-sm">
-              Input
+            <!-- Header -->
+            <div class="border-b border-[#e2e0dc] dark:border-border1 px-6 py-4 text-center">
+                <h2 id="confirm-title" class="text-lg font-semibold">
+                    Clear Editor
+                </h2>
             </div>
-            <textarea id="input-box" spellcheck="false" autocorrect="off" autocapitalize="off" autocomplete="off"
-              class="flex-1 min-h-[60px] sm:min-h-0 bg-[#f5f4f2] dark:bg-main text-[#333] dark:text-[#c8c4bc] px-2.5 py-1.5 border-none outline-none resize-none text-base"></textarea>
-          </div>
-          <div class="flex flex-col flex-1">
-            <div
-              class="px-3.5 py-1.5 text-[#777] dark:text-[#444] bg-[#f5f4f2] dark:bg-main uppercase border-b border-[#e2e0dc] dark:border-border1 shrink-0 tracking-[0.1em] text-xs sm:text-sm">
-              Output
-            </div>
-            <div id="ouptut-box"
-              class="flex-1 min-h-[60px] sm:min-h-0 bg-[#f5f4f2] dark:bg-main text-[#2f7d43] dark:text-[#a8d8a8] px-2.5 py-1.5 overflow-y-auto whitespace-pre-wrap leading-[1.55] lowercase text-base">
-              Run your code to see the Output ...
-            </div>
-          </div>
-        </div>
-      </div>
 
-      <!-- Right panel -->
-      <div class="flex flex-col w-full lg:w-1/2 min-h-0 bg-[#f5f4f2] dark:bg-main transition-colors duration-main">
-
-        <div class="flex-1 flex flex-col min-h-0 overflow-hidden border-b border-[#e2e0dc] dark:border-border1">
-          <div
-            class="h-[45px] flex items-center gap-2 px-3.5 py-2 border-b border-[#e2e0dc] dark:border-border1 bg-[#ececec] dark:bg-[#111] shrink-0">
-            <span class="text-vis uppercase tracking-[0.15em] text-sm sm:text-base">Vizualiser</span>
-            <span id="viz-detected" class="ml-auto text-[#999] dark:text-[#444] text-xs sm:text-sm">auto-detect from
-              code</span>
-          </div>
-          <div id="viz-canvas" class="flex items-center justify-center flex-1 min-h-0 p-3 overflow-auto">
-            <div class="dark:text-[#c9c7c2] text-[#2a2a2a] text-center leading-[2px]">
-              Click <span class="capitalize dark:text-vis text-sky-700">vizualise</span>
+            <!-- Body -->
+            <div class="px-6 py-5 text-center">
+                <p id="confirm-message" class="text-[#666] dark:text-[#999]">
+                    This will remove all code from the editor.
+                </p>
+                <p class="mt-2 text-sm text-red-500">
+                    This action cannot be undone.
+                </p>
             </div>
-          </div>
-        </div>
 
-        <div class="h-[156px] flex flex-col shrink-0">
-          <div
-            class="h-[61px] flex items-center gap-[7px] px-3.5 py-[11px] bg-[#ececec] dark:bg-[#111] shrink-0 border-b border-[#e2e0dc] dark:border-border1">
-            <span class="text-second tracking-[0.15em] uppercase text-sm sm:text-base">Tracer</span>
-            <div class="flex gap-1">
-              <button onclick="stepBack()"
-                class="rounded-main border border-[#d8d6d1] dark:border-border2 text-[#777] dark:text-[#666] px-2 py-0.5 cursor-pointer transition-all duration-main hover:bg-second hover:text-white dark:hover:text-main hover:border-second">
-                <i class="fa-solid fa-arrow-left"></i>
-              </button>
-              <button onclick="stepFwd()"
-                class="rounded-main border border-[#d8d6d1] dark:border-border2 text-[#777] dark:text-[#666] px-2 py-0.5 cursor-pointer transition-all duration-main hover:bg-second hover:text-white dark:hover:text-main hover:border-second">
-                <i class="fa-solid fa-arrow-right"></i>
-              </button>
+            <!-- Footer -->
+            <div class="flex justify-end gap-3 border-t border-[#e2e0dc] dark:border-border1 px-6 py-4">
+                <button id="confirm-cancel"
+                    class="rounded-main border border-[#d8d6d1] dark:border-border2 px-4 py-2 transition-all duration-main hover:bg-[#555] hover:text-white dark:hover:bg-[#aaa] dark:hover:text-main">
+                    Cancel
+                </button>
+
+                <button id="confirm-confirm"
+                    class="rounded-main border border-red-500 bg-red-500 px-4 py-2 text-white transition-all duration-100 hover:bg-red-600 hover:border-red-600 hover:scale-[1.03] active:scale-95">
+                    Clear
+                </button>
             </div>
-            <span id="current-line" class="ml-auto tracking-[0.15em] text-[#999] dark:text-[#555] text-sm">line -</span>
-          </div>
-          <div id="tracer-body" class="flex-1 flex flex-col gap-[3px] px-3 py-1.5 h-auto overflow-auto">
-            <div class="text-[#d8d6d1] dark:text-border2 text-center sm:text-xl text-base">Run the code to trace its
-              steps</div>
-          </div>
         </div>
-      </div>
     </div>
-  </div>
-
-  <script type="module" src="scripts/main.js"></script>
-  <script type="module" src="scripts/runner/runCode.js"></script>
-  <script type="module" src="scripts/editor/language.js"></script>
 </body>
+<script type="module" src="./scripts/main.js"></script>
 
 </html>
